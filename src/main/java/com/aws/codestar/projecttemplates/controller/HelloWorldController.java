@@ -1,11 +1,15 @@
 package com.aws.codestar.projecttemplates.controller;
 
+import com.seysa.domain.service.ImageService;
 import org.json.JSONObject;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 /**
  * Basic Spring web service controller that handles all GET requests.
@@ -16,9 +20,15 @@ public class HelloWorldController {
 
     private static final String MESSAGE_FORMAT = "Hello %s!";
 
+    @Autowired
+    private ImageService imageService;
+
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
-    public ResponseEntity helloWorldGet(@RequestParam(value = "name", defaultValue = "World") String name) {
-        return ResponseEntity.ok(createResponse(name));
+    public ResponseEntity helloWorldGet(@RequestParam(value = "image", defaultValue = "World") String image) {
+
+        //return ResponseEntity.ok(createResponse(        imageService.getLabels()));
+        //return ResponseEntity.ok(createResponse(name));
+        return ResponseEntity.ok(imageService.search(image));
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")
@@ -28,5 +38,10 @@ public class HelloWorldController {
 
     private String createResponse(String name) {
         return new JSONObject().put("Output", String.format(MESSAGE_FORMAT, name)).toString();
+    }
+
+    private String createResponse(List<String> labels){
+        return new JSONObject().put("Output", labels).toString();
+
     }
 }
