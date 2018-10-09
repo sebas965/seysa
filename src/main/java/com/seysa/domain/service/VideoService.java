@@ -1,6 +1,6 @@
-package com.seysa.domain.facade;
+package com.seysa.domain.service;
 
-public interface VideoFacade {
+public interface VideoService {
 
     void scan(final String fileName);
 

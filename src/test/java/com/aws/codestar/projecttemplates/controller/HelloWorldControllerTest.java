@@ -11,7 +11,7 @@ package com.aws.codestar.projecttemplates.controller;
 //import static org.junit.jupiter.api.Assertions.assertEquals;
 
 /**
- * Tests for {@link HelloWorldController}. Modify the tests in order to support your use case as you build your project.
+ * Tests for {@link com.seysa.infrastructure.api.HelloWorldController}. Modify the tests in order to support your use case as you build your project.
  */
 //@DisplayName("Tests for HelloWorldController")
 public class HelloWorldControllerTest {
@@ -19,7 +19,7 @@ public class HelloWorldControllerTest {
 //    private static final String EXPECTED_RESPONSE_VALUE = "Hello AWS CodeStar!";
 //    private static final String INPUT_NAME = "AWS CodeStar";
 //
-//    private final com.aws.codestar.projecttemplates.controller.HelloWorldController controller = new HelloWorldController();
+//    private final com.seysa.infrastructure.api.HelloWorldController controller = new HelloWorldController();
 //
 //    /**
 //     * Initializing variables before we run the tests.

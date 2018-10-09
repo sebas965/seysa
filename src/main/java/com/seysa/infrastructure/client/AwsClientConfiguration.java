@@ -2,11 +2,16 @@ package com.seysa.infrastructure.client;
 
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.client.builder.AwsClientBuilder;
+import com.amazonaws.regions.Regions;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDB;
 import com.amazonaws.services.dynamodbv2.AmazonDynamoDBClient;
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
 import com.amazonaws.services.rekognition.AmazonRekognition;
 import com.amazonaws.services.rekognition.AmazonRekognitionClientBuilder;
+import com.amazonaws.services.sns.AmazonSNS;
+import com.amazonaws.services.sns.AmazonSNSClient;
+import com.amazonaws.services.sqs.AmazonSQS;
+import com.amazonaws.services.sqs.AmazonSQSClient;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -29,6 +34,10 @@ public class AwsClientConfiguration {
     private String dynamoEndpoint;
     @Value("${dynamo.region}")
     private String dynamoRegion;
+    @Value("${local.sqs.endpoint}")
+    private String sqsEndpoint;
+    @Value("${local.sqs.region}")
+    private String sqsRegion;
 
     @Bean
     public RekognitionClient rekognitionClient() {
@@ -36,8 +45,9 @@ public class AwsClientConfiguration {
     }
 
     @Bean
-    public AmazonRekognition amazonRekognitionClient(){
-        return AmazonRekognitionClientBuilder.standard().withRegion("us-west-2").withCredentials(staticCredentialsProvider).build();
+    public AmazonRekognition amazonRekognitionClient() {
+        return AmazonRekognitionClientBuilder.standard().withRegion("us-west-2")
+                .withCredentials(staticCredentialsProvider).build();
     }
 
     @Bean
@@ -62,5 +72,17 @@ public class AwsClientConfiguration {
             @Autowired
             final AmazonDynamoDB dynamoDbClient) {
         return new DynamoDBMapper(dynamoDbClient);
+    }
+
+    @Bean
+    public AmazonSNS amazonSNSClient() {
+        return AmazonSNSClient.builder().withCredentials(staticCredentialsProvider).withRegion(Regions.US_WEST_2)
+                .build();
+    }
+
+    @Bean
+    public AmazonSQS amazonSQS() {
+        return AmazonSQSClient.builder().withCredentials(staticCredentialsProvider)
+                .withEndpointConfiguration(new AwsClientBuilder.EndpointConfiguration(sqsEndpoint, sqsRegion)).build();
     }
 }

@@ -1,4 +1,4 @@
-package com.aws.codestar.projecttemplates;
+package com.seysa.infrastructure.configuration;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
@@ -13,7 +13,7 @@ import org.springframework.context.annotation.ComponentScan;
  *  @EnableAutoConfiguration
  *  @ComponentScan
  */
-@ComponentScan({"com.seysa.*","com.aws.codestar.projecttemplates"})
+@ComponentScan({"com.seysa.*"})
 @SpringBootApplication
 public class Application extends SpringBootServletInitializer {
 

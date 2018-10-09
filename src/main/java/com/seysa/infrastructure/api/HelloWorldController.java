@@ -1,6 +1,7 @@
-package com.aws.codestar.projecttemplates.controller;
+package com.seysa.infrastructure.api;
 
 import com.seysa.domain.service.ImageService;
+import com.seysa.domain.service.VideoService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -23,12 +24,19 @@ public class HelloWorldController {
     @Autowired
     private ImageService imageService;
 
+    @Autowired
+    private VideoService videoService;
+
+
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity helloWorldGet(@RequestParam(value = "image", defaultValue = "World") String image) {
 
         //return ResponseEntity.ok(createResponse(        imageService.getLabels()));
         //return ResponseEntity.ok(createResponse(name));
-        return ResponseEntity.ok(imageService.search(image));
+        imageService.addImageToCollection("juan.jpg");
+        videoService.scan("video.mp4");
+
+        return ResponseEntity.ok(createResponse(image));
     }
 
     @RequestMapping(method = RequestMethod.POST, produces = "application/json")

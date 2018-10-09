@@ -1,5 +1,6 @@
 package com.aws.codestar.projecttemplates.controller;
 
+import com.seysa.infrastructure.api.HelloWorldController;
 import org.json.JSONObject;
 import org.junit.Assert;
 import org.junit.Before;

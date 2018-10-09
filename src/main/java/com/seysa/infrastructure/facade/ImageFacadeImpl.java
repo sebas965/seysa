@@ -1,90 +1,92 @@
 package com.seysa.infrastructure.facade;
 
+import com.amazonaws.services.rekognition.AmazonRekognition;
+import com.amazonaws.services.rekognition.model.CreateCollectionRequest;
+import com.amazonaws.services.rekognition.model.CreateCollectionResult;
+import com.amazonaws.services.rekognition.model.DescribeCollectionRequest;
+import com.amazonaws.services.rekognition.model.DescribeCollectionResult;
+import com.amazonaws.services.rekognition.model.FaceRecord;
+import com.amazonaws.services.rekognition.model.Image;
+import com.amazonaws.services.rekognition.model.IndexFacesRequest;
+import com.amazonaws.services.rekognition.model.IndexFacesResult;
 import com.seysa.domain.facade.ImageFacade;
-import org.apache.commons.collections4.CollectionUtils;
-import org.apache.commons.lang3.tuple.ImmutablePair;
-import org.apache.commons.lang3.tuple.Pair;
+import com.seysa.infrastructure.factory.ImageFactory;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
-import software.amazon.awssdk.services.rekognition.RekognitionClient;
-import software.amazon.awssdk.services.rekognition.model.CompareFacesRequest;
-import software.amazon.awssdk.services.rekognition.model.CompareFacesResponse;
-import software.amazon.awssdk.services.rekognition.model.DetectLabelsRequest;
-import software.amazon.awssdk.services.rekognition.model.DetectLabelsResponse;
-import software.amazon.awssdk.services.rekognition.model.Image;
-import software.amazon.awssdk.services.rekognition.model.Label;
-import software.amazon.awssdk.services.rekognition.model.S3Object;
-import software.amazon.awssdk.services.s3.S3Client;
-import software.amazon.awssdk.services.s3.model.ListObjectsRequest;
-import software.amazon.awssdk.services.s3.model.ListObjectsResponse;
+import org.springframework.beans.factory.annotation.Qualifier;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Service;
 
-import javax.annotation.PostConstruct;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
-@Component
+@Qualifier("ImageFacadeImpl")
+@Service
 public class ImageFacadeImpl implements ImageFacade {
 
-    List<Pair<String, String>> people = new ArrayList<>();
+    @Value("${s3.image.bucket}")
+    private String imageBucket;
     @Autowired
-    private RekognitionClient rekognitionClient;
+    private AmazonRekognition amazonRekognitionClient;
     @Autowired
-    private S3Client s3Client;
-    private String photo = "picture.jpg";
-    private String bucket = "cajon-de-fotos";
+    private ImageFactory imageFactory;
 
-    @PostConstruct
-    public void setup() {
-        people.add(new ImmutablePair<>("sebastian", "sebas.jpg"));
-        people.add((new ImmutablePair<>("Juan Pablo", "juan.jpg")));
-        //people.add(new ImmutablePair<>("Juan carlos", "quesada.jpg"));
-    }
+    @Value("${rekognition.collection.id}")
+    private String rekognitionCollectionId;
+
 
     @Override
     public List<String> getLabels() {
-        DetectLabelsRequest detectLabelsRequest = null;
-        //https://docs.aws.amazon.com/sdk-for-java/v1/developer-guide/credentials.html
-        //        BasicAWSCredentials awsCreds = new BasicAWSCredentials("access_key_id", "secret_key_id");
-        //        AmazonS3 s3Client = AmazonS3ClientBuilder.standard()
-        //                .withCredentials(new AWSStaticCredentialsProvider(awsCreds))
-        //                .build();
-        DetectLabelsRequest request = DetectLabelsRequest.builder().
-                image(Image.builder().s3Object(S3Object.builder().bucket(bucket).name(photo).build()).build())
-                .maxLabels(10).minConfidence(75F).build();
-        DetectLabelsResponse response = rekognitionClient.detectLabels(request);
-        List<Label> labels = response.labels();
-        System.out.println("Detected labels for " + photo);
-        List<String> listOfLabels = new ArrayList<>();
-        for (Label label : labels) {
-            System.out.println(label.name() + ": " + label.confidence().toString());
-            listOfLabels.add(label.name());
-        }
-        return listOfLabels;
+        throw new UnsupportedOperationException("Missing implementation");
     }
 
     @Override
-    public String search(final String image1) {
-        Image sourceImage = Image.builder().s3Object(S3Object.builder().bucket(bucket).name(image1).build()).build();
-        ListObjectsRequest listObjectsRequest = ListObjectsRequest.builder().bucket(bucket).build();
-        ListObjectsResponse listObjectsResponse = s3Client.listObjects(listObjectsRequest);
-
-//        for (S3Object s3Object: listObjectsResponse.contents()) {
-//
-//            s3Object.name()
-//        }
-
-
-        for (Pair<String, String> pair : people) {
-            Image targetImage = Image.builder()
-                    .s3Object(S3Object.builder().bucket(bucket).name(pair.getRight()).build()).build();
-            CompareFacesRequest request = CompareFacesRequest.builder().similarityThreshold(95F)
-                    .sourceImage(sourceImage).targetImage(targetImage).build();
-            CompareFacesResponse response = rekognitionClient.compareFaces(request);
-            if (CollectionUtils.isNotEmpty(response.faceMatches())){
-                return pair.getLeft();
-            }
-        }
-        return "No Match";
+    public String search(String image) {
+        throw new UnsupportedOperationException("Missing implementation");
     }
 
+    @Override
+    public String createCollection(final String collectionId) {
+        CreateCollectionRequest createCollectionRequest = new CreateCollectionRequest().withCollectionId(collectionId);
+        CreateCollectionResult createCollectionResult = amazonRekognitionClient
+                .createCollection(createCollectionRequest);
+        return createCollectionResult.getCollectionArn();
+    }
+
+    @Override
+    public String describeCollection(final String collectionId) {
+        DescribeCollectionRequest describeCollectionRequest = new DescribeCollectionRequest()
+                .withCollectionId(collectionId);
+        DescribeCollectionResult describeCollectionResult = amazonRekognitionClient
+                .describeCollection(describeCollectionRequest);
+        return describeCollectionResult.getCollectionARN();
+        //        describeCollectionResult.getSdkHttpMetadata().getHttpStatusCode();
+    }
+
+    @Override
+    public void addImageToCollection(final String imageFileName) {
+        Image image = imageFactory.createImage(imageFileName, imageBucket);
+        UUID imageId = UUID.randomUUID();
+        IndexFacesRequest indexFacesRequest = new IndexFacesRequest().withImage(image)
+                //.withQualityFilter(QualityFilter.AUTO)
+                //.withMaxFaces(1)
+                .withCollectionId(rekognitionCollectionId).withExternalImageId(imageId.toString())
+                .withDetectionAttributes("DEFAULT");
+        IndexFacesResult indexFacesResult = amazonRekognitionClient.indexFaces(indexFacesRequest);
+        System.out.println("Results for " + imageFileName);
+        System.out.println("Faces indexed:");
+        List<FaceRecord> faceRecords = indexFacesResult.getFaceRecords();
+        for (FaceRecord faceRecord : faceRecords) {
+            System.out.println("  Face ID: " + faceRecord.getFace().getFaceId());
+            System.out.println("  Location:" + faceRecord.getFaceDetail().getBoundingBox().toString());
+        }
+        //        List<UnindexedFace> unindexedFaces = indexFacesResult.getUnindexedFaces();
+        //        System.out.println("Faces not indexed:");
+        //        for (UnindexedFace unindexedFace : unindexedFaces) {
+        //            System.out.println("  Location:" + unindexedFace.getFaceDetail().getBoundingBox().toString());
+        //            System.out.println("  Reasons:");
+        //            for (String reason : unindexedFace.getReasons()) {
+        //                System.out.println("   " + reason);
+        //            }
+        //        }
+    }
 }

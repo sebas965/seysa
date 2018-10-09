@@ -9,4 +9,5 @@ public interface ImageService {
 
     String search(String image);
 
+    void addImageToCollection(final String image);
 }
