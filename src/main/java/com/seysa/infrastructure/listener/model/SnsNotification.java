@@ -1,4 +1,4 @@
-package com.seysa.infrastructure.model;
+package com.seysa.infrastructure.listener.model;
 
 import com.google.gson.annotations.SerializedName;
 

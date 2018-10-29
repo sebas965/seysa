@@ -12,11 +12,8 @@ import java.lang.reflect.Modifier;
 public class SerializerConfiguration {
 
     @Bean
-    public Gson gson(){
-         return  new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
-                .excludeFieldsWithModifiers(Modifier.STATIC)
-                .create();
-
+    public Gson gson() {
+        return new GsonBuilder().setFieldNamingPolicy(FieldNamingPolicy.LOWER_CASE_WITH_UNDERSCORES)
+                .excludeFieldsWithModifiers(Modifier.STATIC).create();
     }
-
 }

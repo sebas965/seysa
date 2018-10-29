@@ -1,20 +1,20 @@
-package com.seysa.infrastructure.model;
+package com.seysa.infrastructure.listener.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class Video {
+public class VideoScanMetaData {
 
     @SerializedName("S3ObjectName")
     private String s3ObjectName;
     @SerializedName("S3Bucket")
     private String s3Bucket;
 
-    public Video() {
+    public VideoScanMetaData() {
     }
 
     @Override
     public String toString() {
-        return "Video{" + "s3ObjectName='" + s3ObjectName + '\'' + ", s3Bucket='" + s3Bucket + '\'' + '}';
+        return "VideoScanMetaData{" + "s3ObjectName='" + s3ObjectName + '\'' + ", s3Bucket='" + s3Bucket + '\'' + '}';
     }
 
     public String getS3ObjectName() {

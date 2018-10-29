@@ -1,8 +1,8 @@
-package com.seysa.infrastructure.model;
+package com.seysa.infrastructure.listener.model;
 
 import com.google.gson.annotations.SerializedName;
 
-public class FaceSearchNotification {
+public class VideoScanNotification {
 
     @SerializedName("JobId")
     private String jobId;
@@ -13,9 +13,9 @@ public class FaceSearchNotification {
     @SerializedName("Timestamp")
     private long timestamp;
     @SerializedName("Video")
-    private Video video;
+    private VideoScanMetaData videoScanMetaData;
 
-    public FaceSearchNotification() {
+    public VideoScanNotification() {
     }
 
     public String getJobId() {
@@ -50,17 +50,17 @@ public class FaceSearchNotification {
         this.timestamp = timestamp;
     }
 
-    public Video getVideo() {
-        return video;
+    public VideoScanMetaData getVideoScanMetaData() {
+        return videoScanMetaData;
     }
 
-    public void setVideo(Video video) {
-        this.video = video;
+    public void setVideoScanMetaData(VideoScanMetaData videoScanMetaData) {
+        this.videoScanMetaData = videoScanMetaData;
     }
 
     @Override
     public String toString() {
-        return "FaceSearchNotification{" + "jobId='" + jobId + '\'' + ", status='" + status + '\'' + ", api='" + api
-                + '\'' + ", timestamp=" + timestamp + ", video=" + video + '}';
+        return "VideoScanNotification{" + "jobId='" + jobId + '\'' + ", status='" + status + '\'' + ", api='" + api
+                + '\'' + ", timestamp=" + timestamp + ", videoScanMetaData=" + videoScanMetaData + '}';
     }
 }

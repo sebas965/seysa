@@ -4,6 +4,7 @@ import com.amazon.sqs.javamessaging.ProviderConfiguration;
 import com.amazon.sqs.javamessaging.SQSConnectionFactory;
 import com.amazonaws.auth.AWSStaticCredentialsProvider;
 import com.amazonaws.services.sqs.AmazonSQS;
+import com.seysa.infrastructure.listener.ListenerErrorHandler;
 import com.seysa.infrastructure.listener.SQSListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -27,6 +28,8 @@ public class ListenerConfiguration {
     private AmazonSQS amazonSQSclient;
     @Autowired
     private SQSConnectionFactory sqsConnectionFactory;
+    @Autowired
+    private ListenerErrorHandler listenerErrorHandler;
 
     @Bean
     public DefaultMessageListenerContainer jmsListenerContainer() {
@@ -34,6 +37,7 @@ public class ListenerConfiguration {
         dmlc.setConnectionFactory(sqsConnectionFactory);
         dmlc.setDestinationName(queueName);
         dmlc.setMessageListener(sqsListener);
+        dmlc.setErrorHandler(listenerErrorHandler);
         return dmlc;
     }
 

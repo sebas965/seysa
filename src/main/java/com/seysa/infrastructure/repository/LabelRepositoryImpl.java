@@ -1,28 +1,28 @@
 package com.seysa.infrastructure.repository;
 
 import com.amazonaws.services.dynamodbv2.datamodeling.DynamoDBMapper;
-import com.seysa.infrastructure.repository.model.ProfileItem;
+import com.seysa.infrastructure.repository.model.LabelItem;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public class ProfileRepositoryImpl implements ProfileRepository {
+public class LabelRepositoryImpl implements LabelRepository {
 
     private Logger logger = LogManager.getLogger();
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
     @Autowired
-    private BaseRepository<ProfileItem> baseRepository;
+    private BaseRepository<LabelItem> baseRepository;
 
     @Override
-    public ProfileItem get(final String id) {
-        return baseRepository.get(id, ProfileItem.class);
+    public LabelItem get(final String id) {
+        return baseRepository.get(id, LabelItem.class);
     }
 
     @Override
-    public ProfileItem create(final ProfileItem item) {
-        return baseRepository.create(item, ProfileItem.class);
+    public LabelItem create(final LabelItem label) {
+        return baseRepository.create(label, LabelItem.class);
     }
 }

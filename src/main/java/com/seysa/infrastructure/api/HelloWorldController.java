@@ -1,9 +1,12 @@
 package com.seysa.infrastructure.api;
 
+import com.seysa.domain.model.Video;
 import com.seysa.domain.service.ImageService;
+import com.seysa.domain.service.VideoScanService;
 import com.seysa.domain.service.VideoService;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -25,16 +28,25 @@ public class HelloWorldController {
     private ImageService imageService;
 
     @Autowired
+    private VideoScanService videoScanService;
+
+    @Autowired
     private VideoService videoService;
+
+    @Value("${s3.video.bucket}")
+    private String bucketName;
 
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity helloWorldGet(@RequestParam(value = "image", defaultValue = "World") String image) {
-
         //return ResponseEntity.ok(createResponse(        imageService.getLabels()));
         //return ResponseEntity.ok(createResponse(name));
-        imageService.addImageToCollection("juan.jpg");
-        videoService.scan("video.mp4");
+        //imageService.addImageToCollection("juan.jpg");
+        Video video = videoService.getByName("video.mp4");
+        if (video == null) {
+            video = videoService.create(Video.builder().name("video.mp4").location(bucketName).build());
+        }
+        videoScanService.labelDetectionScan(video);
 
         return ResponseEntity.ok(createResponse(image));
     }

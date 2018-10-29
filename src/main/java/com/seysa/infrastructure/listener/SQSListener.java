@@ -1,6 +1,6 @@
 package com.seysa.infrastructure.listener;
 
-import com.seysa.infrastructure.util.JsonSerializer;
+import com.seysa.infrastructure.util.GsonSerializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -13,8 +13,9 @@ import javax.jms.TextMessage;
 public abstract class SQSListener implements MessageListener {
 
     private static final Logger LOGGER = LoggerFactory.getLogger(SQSListener.class);
+
     @Autowired
-    private JsonSerializer jsonSerializer;
+    protected GsonSerializer gsonSerializer;
 
     @Override
     public void onMessage(final Message message) {

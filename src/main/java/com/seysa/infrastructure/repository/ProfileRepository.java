@@ -1,10 +1,10 @@
 package com.seysa.infrastructure.repository;
 
-import com.seysa.infrastructure.model.ProfileItem;
+import com.seysa.infrastructure.repository.model.ProfileItem;
 
 public interface ProfileRepository {
 
-    ProfileItem getByUuid(final String uuid);
+    ProfileItem get(final String id);
 
     ProfileItem create(final ProfileItem item);
 }
