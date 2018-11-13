@@ -4,11 +4,13 @@ import com.seysa.domain.facade.VideoFacade;
 import com.seysa.domain.model.Video;
 import com.seysa.infrastructure.repository.VideoRepository;
 import com.seysa.infrastructure.repository.model.VideoItem;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component
 public class VideoFacadeImpl implements VideoFacade {
 
+    @Autowired
     private VideoRepository videoRepository;
 
     @Override

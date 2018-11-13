@@ -12,6 +12,7 @@ public class ListenerErrorHandler implements ErrorHandler {
 
     @Override
     public void handleError(final Throwable throwable) {
-        log.error(throwable.getCause().getMessage());
+        log.error("Error in listener", throwable);
+
     }
 }

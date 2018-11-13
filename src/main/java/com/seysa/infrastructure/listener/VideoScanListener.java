@@ -1,6 +1,5 @@
 package com.seysa.infrastructure.listener;
 
-import com.seysa.domain.model.Video;
 import com.seysa.domain.model.VideoScan;
 import com.seysa.domain.service.VideoScanService;
 import com.seysa.domain.service.VideoService;
@@ -27,13 +26,7 @@ public class VideoScanListener extends SNSListener {
                 .getObjectFromJson(snsNotification.getMessage(), VideoScanNotification.class);
         LOGGER.info("Video scan notification received: {}", videoScanNotification.toString());
         VideoScanType videoScanType = VideoScanType.get(videoScanNotification.getApi());
-        Video video = Video.builder().location(videoScanNotification.getVideoScanMetaData().getS3Bucket())
-                .name(videoScanNotification.getVideoScanMetaData().getS3ObjectName()).build();
-
-
-
-        VideoScan videoScan = VideoScan.builder().scanId(videoScanNotification.getJobId())
-                .timestamp(videoScanNotification.getTimestamp()).build();
+        VideoScan videoScan = videoScanService.updateTimestamp(videoScanNotification.getJobId(), videoScanNotification.getTimestamp());
         switch (videoScanType) {
         case FACE_SEARCH:
             videoScanService.getFaceSearchResults(videoScan);
@@ -48,4 +41,5 @@ public class VideoScanListener extends SNSListener {
             LOGGER.error("Unable to detect video scan process.");
         }
     }
+
 }

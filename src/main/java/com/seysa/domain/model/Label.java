@@ -15,6 +15,8 @@ public abstract class Label {
     @Nullable
     public abstract String id();
 
+    public abstract String videoScanId();
+
     public abstract String name();
 
     public abstract Float confidence();
@@ -31,6 +33,8 @@ public abstract class Label {
     public abstract static class Builder {
 
         public abstract Builder id(final String id);
+
+        public abstract Builder videoScanId(final String videoScanId);
 
         public abstract Builder name(final String name);
 

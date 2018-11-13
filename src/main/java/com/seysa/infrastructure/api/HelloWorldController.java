@@ -39,15 +39,13 @@ public class HelloWorldController {
 
     @RequestMapping(method = RequestMethod.GET, produces = "application/json")
     public ResponseEntity helloWorldGet(@RequestParam(value = "image", defaultValue = "World") String image) {
-        //return ResponseEntity.ok(createResponse(        imageService.getLabels()));
-        //return ResponseEntity.ok(createResponse(name));
-        //imageService.addImageToCollection("juan.jpg");
-        Video video = videoService.getByName("video.mp4");
+        Video video = videoService.getByName("Rekonify - Restaurant Camera 1.mp4");
         if (video == null) {
-            video = videoService.create(Video.builder().name("video.mp4").location(bucketName).build());
+            video = videoService.create(Video.builder().name("Rekonify - Restaurant Camera 1.mp4").location(bucketName).build());
         }
+        //videoScanService.labelDetectionScan(video);
+        videoScanService.faceDetectionScan(video);
         videoScanService.labelDetectionScan(video);
-
         return ResponseEntity.ok(createResponse(image));
     }
 

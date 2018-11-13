@@ -20,23 +20,27 @@ public class VideoRepository {
     private Logger logger = LogManager.getLogger();
     @Autowired
     private BaseRepository<VideoItem> baseRepository;
+
     @Autowired
     private DynamoDBMapper dynamoDBMapper;
 
     public VideoItem get(final String id) {
-        return baseRepository.get(id, VideoItem.class);
+       return baseRepository.get(id, VideoItem.class);
+
     }
 
     ;
 
     public VideoItem create(final VideoItem item) {
         return baseRepository.create(item, VideoItem.class);
+
     }
 
     ;
 
     public VideoItem update(final VideoItem item) {
         return baseRepository.update(item, VideoItem.class);
+
     }
 
     ;
@@ -45,7 +49,7 @@ public class VideoRepository {
         final VideoItem item = new VideoItem();
         item.setName(videoName);
         final DynamoDBQueryExpression<VideoItem> queryExpressionSecondary = new DynamoDBQueryExpression<VideoItem>()
-                .withHashKeyValues(item).withIndexName(VideoItem.VIDEO_NAME_INDEX).withConsistentRead(false);
+                .withHashKeyValues(item).withIndexName(VideoItem.NAME_INDEX).withConsistentRead(false);
         try {
             List<VideoItem> items = dynamoDBMapper.query(VideoItem.class, queryExpressionSecondary);
             if (items.size() > 1) {
